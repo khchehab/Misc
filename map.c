@@ -3,6 +3,10 @@
 #include <stdbool.h>
 #include "map.h"
 
+static char* error = NULL;
+
+int key_exists(map* map, int key);
+
 /*
  * Initializes a map of integer key/value pairs with the specified size.
  */
@@ -11,6 +15,7 @@ map* init_map(int size) {
     map->count = 0;
     map->size = size;
     map->entries = malloc(size * sizeof(entry));
+    error = NULL;
     return map;
 }
 
@@ -20,6 +25,7 @@ map* init_map(int size) {
  */
 void free_map(map* map) {
     if(map == NULL) {
+        error = "Map pointer is NULL";
         return;
     }
 
@@ -28,6 +34,7 @@ void free_map(map* map) {
     map->size = 0;
     map->entries = NULL;
     free(map);
+    error = NULL;
 }
 
 /*
@@ -35,23 +42,34 @@ void free_map(map* map) {
  * It will return true if inserted, and false otherwise.
  */
 bool insert_entry(map* map, int key, int value) {
-    // todo the controls below are separated for later on if error handling and text are implemented to differentiate the errors
+    // check if map pointer is null
+    if(map == NULL) {
+        error = "Map pointer is NULL";
+        return false;
+    }
 
-    // check if map pointers are not null
-    if(map == NULL || map->entries == NULL) {
+    // check if entries pointer is null
+    if(map->entries == NULL) {
+        error = "Entries pointer is NULL";
         return false;
     }
 
     // check if there are no more spaces for the entry
     if(map->count >= map->size) {
+        error = "There is no more space for a new entry";
         return false;
     }
 
-    // todo handle if key exist
+    // check if key exists
+    if(key_exists(map, key) > -1) {
+        error = "The key already exists";
+        return false;
+    }
 
-    map->count++;
     (map->entries + map->count)->key = key;
     (map->entries + map->count)->value = value;
+    map->count++;
+    error = NULL;
 
     return true;
 }
@@ -63,6 +81,8 @@ bool insert_entry(map* map, int key, int value) {
 bool remove_entry(map* map, int key) {
     // todo implement me
     // watch out for removing an entry in the middle of the pointer, in to reallocate or something to not have an empty memory location of something
+    error = NULL;
+
     return true;
 }
 
@@ -70,16 +90,40 @@ bool remove_entry(map* map, int key) {
  * Prints the map to the console.
  */
 void print_map(map* map) {
-    if(map == NULL || map->size < 1 || map->count < 1 || map->entries == NULL) {
+    if(map == NULL || map->entries == NULL || map->size < 1 || map->count < 1) {
         return;
     }
 
-    printf("------|------\n");
-    printf("%-5s | %-5s\n", "key", "value");
-    printf("------|------\n");
+    printf("Map has %d entries out of %d\n", map->count, map->size);
+    printf(" ------- -------\n");
+    printf("| %-5s | %-5s |\n", "key", "value");
+    printf(" ------- -------\n");
 
     for(int i = 0; i < map->count; ++i) {
-        printf("%-5d | %-5d\n", (map->entries+i)->key, (map->entries+i)->value);
+        printf("| %-5d | %-5d |\n", (map->entries+i)->key, (map->entries+i)->value);
     }
-    printf("------|------\n");
+    printf(" ------- -------\n");
+    error = NULL;
+}
+
+/*
+ * Returns an error text if the last operation failed for some reason.
+ * If another operation was done, previous operation's error text will not persist.
+ */
+char* map_error() {
+    return error;
+}
+
+/* Private Function */
+
+// returns the index of the key in the entries.
+// assumption: map and map->entries are not NULL.
+int key_exists(map* map, int key) {
+    for(int i = 0; i < map->count; i++) {
+        if((map->entries + i)->key == key) {
+            return i;
+        }
+    }
+
+    return -1;
 }

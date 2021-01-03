@@ -6,6 +6,7 @@ int main(int argc, char* argv[]) {
 
     insert_entry(map, 1, 42);
     insert_entry(map, 2, 44);
+    insert_entry(map, 3, 50);
 
     print_map(map);
 

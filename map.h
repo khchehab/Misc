@@ -1,13 +1,6 @@
 #ifndef __MAP_H__
 #define __MAP_H__
 
-// #include <stdbool.h>
-
-// todo:
-// 1. maybe have a parameter to decide if the map is fixed size or can expannd to accomodate more entires than original specified size.
-// 2. see how to handle errors, like an error message. Maybe do something similar to SDL, like SDL_GetError or something.
-// 3. maybe can be expanded to have ordering.
-
 /*
  * Map for integer key/value pairs.
  */
@@ -22,6 +15,11 @@ typedef struct map {
     int size;
     int count;
 } map;
+
+// todo:
+// 1. maybe have a parameter to decide if the map is fixed size or can expand to accommodate more entires than original specified size.
+// 2. see how to handle errors, like an error message. Maybe do something similar to SDL, like SDL_GetError or something.
+// 3. maybe add ordering.
 
 /*
  * Initializes a map of integer key/value pairs with the specified size.
@@ -50,5 +48,11 @@ _Bool remove_entry(map* map, int key);
  * Prints the map to the console.
  */
 void print_map(map* map);
+
+/*
+ * Returns an error text if the last operation failed for some reason.
+ * If another operation was done, previous operation's error text will not persist.
+ */
+char* map_error();
 
 #endif // __MAP_H__
