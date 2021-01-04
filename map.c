@@ -87,6 +87,18 @@ bool remove_entry(map* map, int key) {
 }
 
 /*
+ * Get the value of the specified key from the map.
+ */
+int get(map* map, int key) {
+    // todo see if it is better to return pointer to the value here
+    // for error handling if key does not exist, the maybe return NULL and if exist return a pointer to it
+    // but then it is returning a pointer so it might cause issues for use of changing or something
+    // study the idea and see its feasiability and which is better.
+
+    return 0;
+}
+
+/*
  * Prints the map to the console.
  */
 void print_map(map* map) {

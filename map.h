@@ -46,6 +46,11 @@ _Bool insert_entry(map* map, int key, int value);
 _Bool remove_entry(map* map, int key);
 
 /*
+ * Get the value of the specified key from the map.
+ */
+int get(map* map, int key);
+
+/*
  * Prints the map to the console.
  */
 void print_map(map* map);
