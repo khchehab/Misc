@@ -2,18 +2,22 @@
 CC=clang
 RM=rm -f
 
+# Directories
+SRC=src
+BUILD=out
+
 # Files
 EXECUTABLE=main
-SOURCE=main.c map.c
+SOURCE=*.c
 
 # Flags
 CC_FLAGS=-std=c11
 
 all: clean main
-	@./main
+	@./$(BUILD)/$(EXECUTABLE)
 
 main:
-	@$(CC) $(SOURCE) -o $(EXECUTABLE) $(CC_FLAGS)
+	@$(CC) $(SRC)/$(SOURCE) -o $(BUILD)/$(EXECUTABLE) $(CC_FLAGS)
 
 clean:
-	@$(RM) $(EXECUTABLE)
+	@$(RM) $(BUILD)/*
