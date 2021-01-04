@@ -89,13 +89,30 @@ bool remove_entry(map* map, int key) {
 /*
  * Get the value of the specified key from the map.
  */
-int get(map* map, int key) {
-    // todo see if it is better to return pointer to the value here
-    // for error handling if key does not exist, the maybe return NULL and if exist return a pointer to it
-    // but then it is returning a pointer so it might cause issues for use of changing or something
-    // study the idea and see its feasiability and which is better.
+bool get_value(map* map, int key, int* value) {
+    // check if map pointer is null
+    if(map == NULL) {
+        error = "Map pointer is NULL";
+        return false;
+    }
 
-    return 0;
+    // check if entries pointer is null
+    if(map->entries == NULL) {
+        error = "Entries pointer is NULL";
+        return false;
+    }
+
+    int index = key_exists(map, key);
+
+    // check if key exists
+    if(index < 0) {
+        error = "The key does not exist";
+        return false;
+    }
+
+    *value = (map->entries + index)->value;
+    error = NULL;
+    return true;
 }
 
 /*

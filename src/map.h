@@ -49,7 +49,7 @@ _Bool remove_entry(map* map, int key);
 /*
  * Get the value of the specified key from the map.
  */
-int get(map* map, int key);
+_Bool get_value(map* map, int key, int* value);
 
 /*
  * Prints the map to the console.
