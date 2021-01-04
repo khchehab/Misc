@@ -21,7 +21,7 @@ typedef struct map {
 // 2. see how to handle errors, like an error message. Maybe do something similar to SDL, like SDL_GetError or something.
 // 3. maybe add ordering.
 // 4. see if there ar eany performance issues with the current oeprations. for example when looking for existance of a key, if it is slow for big number of entries.
-// 5. add unit testing for the map (use Unity testing framework)
+// 5. add unit testing
 
 /*
  * Initializes a map of integer key/value pairs with the specified size.
