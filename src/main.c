@@ -7,7 +7,21 @@ int main(int argc, char* argv[]) {
     insert_entry(map, 1, 42);
     insert_entry(map, 2, 44);
     insert_entry(map, 3, 50);
+    print_map(map);
 
+    remove_entry(map, 3);
+    print_map(map);
+
+    remove_entry(map, 1);
+    print_map(map);
+
+    remove_entry(map, 1);
+    print_map(map);
+
+    remove_entry(map, 2);
+    print_map(map);
+
+    remove_entry(map, 7);
     print_map(map);
 
     free_map(map);

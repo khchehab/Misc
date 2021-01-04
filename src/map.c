@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "map.h"
 
 static char* error = NULL;
@@ -79,10 +80,30 @@ bool insert_entry(map* map, int key, int value) {
  * It will return true if removed, and false otherwise.
  */
 bool remove_entry(map* map, int key) {
-    // todo implement me
-    // watch out for removing an entry in the middle of the pointer, in to reallocate or something to not have an empty memory location of something
-    error = NULL;
+    // check if map pointer is null
+    if(map == NULL) {
+        error = "Map pointer is NULL";
+        return false;
+    }
 
+    // check if entries pointer is null
+    if(map->entries == NULL) {
+        error = "Entries pointer is NULL";
+        return false;
+    }
+
+    int index = key_exists(map, key);
+
+    // check if key exists
+    if(index < 0) {
+        error = "The key does not exist";
+        return false;
+    }
+
+    memmove(map->entries + index, map->entries + index + 1, (map->count - index + 1) * sizeof(entry));
+    map->count--;
+
+    error = NULL;
     return true;
 }
 
@@ -119,7 +140,12 @@ bool get_value(map* map, int key, int* value) {
  * Prints the map to the console.
  */
 void print_map(map* map) {
-    if(map == NULL || map->entries == NULL || map->size < 1 || map->count < 1) {
+    if(map == NULL || map->entries == NULL) {
+        return;
+    }
+
+    if(map->size < 1 || map->count < 1) {
+        printf("Map is empty\n");
         return;
     }
 
