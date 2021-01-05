@@ -24,9 +24,9 @@ typedef struct map {
 // 5. add unit testing
 
 /*
- * Initializes a map of integer key/value pairs with the specified size.
+ * Initializes a map of integer key/value pairs.
  */
-map* init_map(int size);
+map* init_map();
 
 /*
  * Free the map from memory.

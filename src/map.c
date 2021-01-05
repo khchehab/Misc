@@ -4,18 +4,21 @@
 #include <string.h>
 #include "map.h"
 
+#define initial_size 10
+#define increments 10
+
 static char* error = NULL;
 
 int key_exists(map* map, int key);
 
 /*
- * Initializes a map of integer key/value pairs with the specified size.
+ * Initializes a map of integer key/value pairs.
  */
-map* init_map(int size) {
+map* init_map() {
     map* map = malloc(sizeof(map));
     map->count = 0;
-    map->size = size;
-    map->entries = malloc(size * sizeof(entry));
+    map->size = initial_size; // initial size
+    map->entries = malloc(map->size * sizeof(entry));
     error = NULL;
     return map;
 }
@@ -55,16 +58,23 @@ bool insert_entry(map* map, int key, int value) {
         return false;
     }
 
-    // check if there are no more spaces for the entry
-    if(map->count >= map->size) {
-        error = "There is no more space for a new entry";
-        return false;
-    }
-
     // check if key exists
     if(key_exists(map, key) > -1) {
         error = "The key already exists";
         return false;
+    }
+
+    // check if there are no more spaces for the entry, then increase the entries size
+    if(map->count >= map->size) {
+        entry* tmp = realloc(map->entries, (map->size + increments) * sizeof(entry));
+
+        if(tmp == NULL) {
+            error = "Could not increase entries size";
+            return false;
+        }
+
+        map->entries = tmp;
+        map->size += increments;
     }
 
     (map->entries + map->count)->key = key;
@@ -102,6 +112,20 @@ bool remove_entry(map* map, int key) {
 
     memmove(map->entries + index, map->entries + index + 1, (map->count - index + 1) * sizeof(entry));
     map->count--;
+
+    // after removing the entry and decrementing the count, if there is a multiple of increments free,
+    // reallocate the array
+    if(map->count % increments == 0) {
+        entry* tmp = realloc(map->entries, (map->size - increments) * sizeof(entry));
+
+        if(tmp == NULL) {
+            error = "Could not decrease entries size";
+            return true; // if we could not decrease the entries size, it is fine, we still have more memory for later on
+        }
+
+        map->entries = tmp;
+        map->size -= increments;
+    }
 
     error = NULL;
     return true;
@@ -149,7 +173,10 @@ void print_map(map* map) {
         return;
     }
 
-    printf("Map has %d entries out of %d\n", map->count, map->size);
+    #ifdef DEBUG
+    printf("--DEBGUG--address of map: %ul, address of entries: %ul, size: %d and count: %d\n", map, map->entries, map->size, map->count);
+    #endif
+
     printf(" ------- -------\n");
     printf("| %-5s | %-5s |\n", "key", "value");
     printf(" ------- -------\n");

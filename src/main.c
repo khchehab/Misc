@@ -1,29 +1,25 @@
 #include "map.h"
 
 int main(int argc, char* argv[]) {
-    map* map = init_map(3);
+    map* map = init_map();
+    print_map(map);
 
     insert_entry(map, 1, 42);
-    insert_entry(map, 2, 44);
-    insert_entry(map, 3, 50);
     print_map(map);
 
-    remove_entry(map, 3);
+    for(int i = 0; i < 9; i++) {
+        insert_entry(map, i, 42 + ((i+1) * 2));
+    }
     print_map(map);
 
-    remove_entry(map, 1);
+    insert_entry(map, 10, 101);
     print_map(map);
 
-    remove_entry(map, 1);
-    print_map(map);
-
-    remove_entry(map, 2);
-    print_map(map);
-
-    remove_entry(map, 7);
+    for(int i = 20; i < 25; i++) {
+        insert_entry(map, i, 42 + i);
+    }
     print_map(map);
 
     free_map(map);
-
     return 0;
 }
