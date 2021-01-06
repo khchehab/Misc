@@ -3,17 +3,6 @@
 #include <stdbool.h>
 #include "hashtable.h"
 
-// typedef struct hash_entry {
-//     int key;
-//     int value;
-//     hash_entry* next;
-// } hash_entry;
-
-// typedef struct hash_table {
-//     int size;
-//     hash_entry** entries;
-// } hash_table;
-
 unsigned int hash(hash_table* hash_table, int key);
 hash_entry* hash_entry_init(int key, int value);
 void hash_entry_free(hash_entry* hash_entry);
@@ -46,17 +35,17 @@ bool hash_table_insert(hash_table* hash_table, int key, int value) {
         return false;
     }
 
-    // the hash value returned will be the index in memory to store this key in
+    // the hash value returned will be the index in memory to store this entry in.
     unsigned int hash_value = hash(hash_table, key);
     hash_entry* bucket = hash_table->entries[hash_value];
 
-    // if the memory at hash_value is empty, put the pair
+    // if the memory at hash_value is empty, put the pair.
     if(bucket == NULL) {
         hash_table->entries[hash_value] = hash_entry_init(key, value);
     } else {
         hash_entry* prev;
 
-        // if there is an entry in memory at hash_value, we need to search for the specified key at the entry
+        // if there is an entry in memory at hash_value, we need to search for the specified key at the entry.
         do {
             if(bucket->key == key) {
                 bucket->value = value;
@@ -67,19 +56,49 @@ bool hash_table_insert(hash_table* hash_table, int key, int value) {
             bucket = bucket->next;
         } while(bucket != NULL);
 
-        // at this point, no key were found, so we add to the next of the current bucket pointer
+        // at this point, no key were found, so we add to the next of the current bucket pointer.
         prev->next = hash_entry_init(key, value);
     }
 
     return true;
 }
 
-bool hash_table_get(hash_table* hash_table, int key) {
+bool hash_table_get(hash_table* hash_table, int key, int* value) {
     return true;
 }
 
 bool hash_table_remove(hash_table* hash_table, int key) {
-    return true;
+    if(hash_table == NULL || hash_table->entries == NULL) {
+        return false;
+    }
+
+    // the hash value returned will be the index in memory to remove this entry.
+    unsigned int hash_value = hash(hash_table, key);
+    hash_entry* bucket = hash_table->entries[hash_value];
+
+    // if bucket is null, then the key does not exist
+    if(bucket == NULL) {
+        return false;
+    }
+
+    hash_entry* prev = NULL;
+    do {
+        if(bucket->key == key) {
+            if(prev == NULL) {
+                hash_table->entries[hash_value] = bucket->next;
+            } else {
+                prev->next = bucket->next;
+            }
+
+            free(bucket);
+            return true;
+        }
+
+        prev = bucket;
+        bucket = bucket->next;
+    } while(bucket != NULL);
+
+    return false;
 }
 
 void hash_table_print(hash_table* hash_table) {
@@ -133,12 +152,12 @@ void hash_table_print(hash_table* hash_table) {
     printf(" ------- -------\n");
 }
 
-// Hash function
+// Hash function - todo
 unsigned int hash(hash_table* hash_table, int key) {
     return key % hash_table->size;
 }
 
-// Create an entry for the hash table
+// Create an entry for the hash table.
 hash_entry* hash_entry_init(int key, int value) {
     hash_entry* hash_entry = malloc(sizeof(hash_entry));
     hash_entry->key = key;
@@ -147,6 +166,7 @@ hash_entry* hash_entry_init(int key, int value) {
     return hash_entry;
 }
 
+// Free the hash entry and its next elements.
 void hash_entry_free(hash_entry* hash_entry) {
     if(hash_entry != NULL) {
         hash_entry_free(hash_entry->next);
