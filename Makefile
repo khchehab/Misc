@@ -1,6 +1,7 @@
 # Commands
 CC=clang
-RM=rm -f
+RM=rm -rf
+MKDIR=mkdir -p
 
 # Directories
 SRC=src
@@ -11,7 +12,7 @@ EXECUTABLE=main
 SOURCE=$(SRC)/main.c $(SRC)/hashtable.c
 
 # Flags
-CC_FLAGS=-std=c11
+CC_FLAGS=-std=c11 -fsanitize=address
 
 
 all: clean main
@@ -20,8 +21,11 @@ all: clean main
 debug: CC_FLAGS+=-DDEBUG
 debug: all
 
-main:
+main: $(BUILD)
 	@$(CC) $(SOURCE) -o $(BUILD)/$(EXECUTABLE) $(CC_FLAGS)
 
+$(BUILD):
+	@$(MKDIR) $(BUILD)
+
 clean:
-	@$(RM) $(BUILD)/*
+	@$(RM) $(BUILD)
