@@ -1,25 +1,19 @@
-#include "map.h"
+#include "hashtable.h"
 
 int main(int argc, char* argv[]) {
-    map* map = init_map();
-    print_map(map);
 
-    insert_entry(map, 1, 42);
-    print_map(map);
+    hash_table* hash_table = hash_table_init(6);
 
-    for(int i = 0; i < 9; i++) {
-        insert_entry(map, i, 42 + ((i+1) * 2));
-    }
-    print_map(map);
+    hash_table_insert(hash_table, 120, 34);
+    hash_table_insert(hash_table, 250, 44);
+    hash_table_insert(hash_table, 33, 52);
+    hash_table_insert(hash_table, 42, 56);
+    hash_table_insert(hash_table, 251, 178);
+    hash_table_insert(hash_table, 522, 23);
 
-    insert_entry(map, 10, 101);
-    print_map(map);
+    hash_table_print(hash_table);
 
-    for(int i = 20; i < 25; i++) {
-        insert_entry(map, i, 42 + i);
-    }
-    print_map(map);
+    hash_table_free(hash_table);
 
-    free_map(map);
     return 0;
 }

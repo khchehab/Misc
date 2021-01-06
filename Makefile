@@ -8,7 +8,7 @@ BUILD=out
 
 # Files
 EXECUTABLE=main
-SOURCE=*.c
+SOURCE=$(SRC)/main.c $(SRC)/hashtable.c
 
 # Flags
 CC_FLAGS=-std=c11
@@ -21,7 +21,7 @@ debug: CC_FLAGS+=-DDEBUG
 debug: all
 
 main:
-	@$(CC) $(SRC)/$(SOURCE) -o $(BUILD)/$(EXECUTABLE) $(CC_FLAGS)
+	@$(CC) $(SOURCE) -o $(BUILD)/$(EXECUTABLE) $(CC_FLAGS)
 
 clean:
 	@$(RM) $(BUILD)/*
