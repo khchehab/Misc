@@ -64,7 +64,32 @@ bool hash_table_insert(hash_table* ht, int key, int value) {
 }
 
 bool hash_table_get(hash_table* ht, int key, int* value) {
-    return true;
+    if(ht == NULL || ht->entries == NULL) {
+        return false;
+    }
+
+    // the hash value returned will be the index in memory get the key's value.
+    unsigned int hash_value = hash(ht, key);
+    hash_entry* bucket = ht->entries[hash_value];
+
+    // if bucket is null, then the key does not exist.
+    if(bucket == NULL) {
+        return false;
+    }
+
+    hash_entry* prev;
+    do {
+        if(bucket->key == key) {
+            *value = bucket->value;
+            return true;
+        }
+
+        prev = bucket;
+        bucket = bucket->next;
+    } while(bucket != NULL);
+
+    // if the while loop finishes, it means the key wasn't found, so no value was retrieved.
+    return false;
 }
 
 bool hash_table_remove(hash_table* ht, int key) {
@@ -76,7 +101,7 @@ bool hash_table_remove(hash_table* ht, int key) {
     unsigned int hash_value = hash(ht, key);
     hash_entry* bucket = ht->entries[hash_value];
 
-    // if bucket is null, then the key does not exist
+    // if bucket is null, then the key does not exist.
     if(bucket == NULL) {
         return false;
     }
@@ -98,6 +123,7 @@ bool hash_table_remove(hash_table* ht, int key) {
         bucket = bucket->next;
     } while(bucket != NULL);
 
+    // if the while loop finishes, it means the key wasn't found, so nothing was removed.
     return false;
 }
 
