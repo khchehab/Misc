@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 
     int size = 10;
     int* a = malloc(size * sizeof(int));
-    // free(a);
+    free(a);
 
     return 0;
 }
