@@ -87,7 +87,7 @@ bool hash_table_get(hash_table* ht, int key, int* value) {
         prev = bucket;
         bucket = bucket->next;
     } while(bucket != NULL);
-
+    
     // if the while loop finishes, it means the key wasn't found, so no value was retrieved.
     return false;
 }
