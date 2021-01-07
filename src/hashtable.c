@@ -3,45 +3,45 @@
 #include <stdbool.h>
 #include "hashtable.h"
 
-unsigned int hash(hash_table* hash_table, int key);
+unsigned int hash(hash_table* ht, int key);
 hash_entry* hash_entry_init(int key, int value);
-void hash_entry_free(hash_entry* hash_entry);
+void hash_entry_free(hash_entry* entry);
 
 hash_table* hash_table_init(int size) {
-    hash_table* hash_table = malloc(sizeof(hash_table));
-    hash_table->size = size;
-    hash_table->entries = malloc(hash_table->size * sizeof(hash_entry*));
-    for(int i = 0; i < hash_table->size; ++i) {
-        hash_table->entries[i] = NULL;
+    hash_table* ht = malloc(sizeof(hash_table));
+    ht->size = size;
+    ht->entries = malloc(ht->size * sizeof(hash_entry*));
+    for(int i = 0; i < ht->size; ++i) {
+        ht->entries[i] = NULL;
     }
     
-    return hash_table;
+    return ht;
 }
 
-void hash_table_free(hash_table* hash_table) {
-    for(int i = 0; i < hash_table->size; ++i) {
-        hash_entry_free(hash_table->entries[i]);
+void hash_table_free(hash_table* ht) {
+    for(int i = 0; i < ht->size; ++i) {
+        hash_entry_free(ht->entries[i]);
     }
 
-    free(hash_table->entries);
-    hash_table->entries = NULL;
-    hash_table->size = 0;
-    free(hash_table);
-    hash_table = NULL;
+    free(ht->entries);
+    ht->entries = NULL;
+    ht->size = 0;
+    free(ht);
+    ht = NULL;
 }
 
-bool hash_table_insert(hash_table* hash_table, int key, int value) {
-    if(hash_table == NULL || hash_table->entries == NULL) {
+bool hash_table_insert(hash_table* ht, int key, int value) {
+    if(ht == NULL || ht->entries == NULL) {
         return false;
     }
 
     // the hash value returned will be the index in memory to store this entry in.
-    unsigned int hash_value = hash(hash_table, key);
-    hash_entry* bucket = hash_table->entries[hash_value];
+    unsigned int hash_value = hash(ht, key);
+    hash_entry* bucket = ht->entries[hash_value];
 
     // if the memory at hash_value is empty, put the pair.
     if(bucket == NULL) {
-        hash_table->entries[hash_value] = hash_entry_init(key, value);
+        ht->entries[hash_value] = hash_entry_init(key, value);
     } else {
         hash_entry* prev;
 
@@ -63,18 +63,18 @@ bool hash_table_insert(hash_table* hash_table, int key, int value) {
     return true;
 }
 
-bool hash_table_get(hash_table* hash_table, int key, int* value) {
+bool hash_table_get(hash_table* ht, int key, int* value) {
     return true;
 }
 
-bool hash_table_remove(hash_table* hash_table, int key) {
-    if(hash_table == NULL || hash_table->entries == NULL) {
+bool hash_table_remove(hash_table* ht, int key) {
+    if(ht == NULL || ht->entries == NULL) {
         return false;
     }
 
     // the hash value returned will be the index in memory to remove this entry.
-    unsigned int hash_value = hash(hash_table, key);
-    hash_entry* bucket = hash_table->entries[hash_value];
+    unsigned int hash_value = hash(ht, key);
+    hash_entry* bucket = ht->entries[hash_value];
 
     // if bucket is null, then the key does not exist
     if(bucket == NULL) {
@@ -85,11 +85,11 @@ bool hash_table_remove(hash_table* hash_table, int key) {
     do {
         if(bucket->key == key) {
             if(prev == NULL) {
-                hash_table->entries[hash_value] = bucket->next;
+                ht->entries[hash_value] = bucket->next;
             } else {
                 prev->next = bucket->next;
             }
-
+            
             free(bucket);
             return true;
         }
@@ -101,8 +101,8 @@ bool hash_table_remove(hash_table* hash_table, int key) {
     return false;
 }
 
-void hash_table_print(hash_table* hash_table) {
-    if(hash_table == NULL || hash_table->entries == NULL) {
+void hash_table_print(hash_table* ht) {
+    if(ht == NULL || ht->entries == NULL) {
         printf("The hash table is empty");
         return;
     }
@@ -126,8 +126,8 @@ void hash_table_print(hash_table* hash_table) {
     printf(" ------- -------\n");
 
     hash_entry* curr;
-    for(int i = 0; i < hash_table->size; ++i) {
-        curr = hash_table->entries[i];
+    for(int i = 0; i < ht->size; ++i) {
+        curr = ht->entries[i];
 
         #ifdef DEBUG
         if(curr == NULL) {
@@ -153,23 +153,25 @@ void hash_table_print(hash_table* hash_table) {
 }
 
 // Hash function - todo
-unsigned int hash(hash_table* hash_table, int key) {
-    return key % hash_table->size;
+unsigned int hash(hash_table* ht, int key) {
+    return key % ht->size;
 }
 
 // Create an entry for the hash table.
 hash_entry* hash_entry_init(int key, int value) {
-    hash_entry* hash_entry = malloc(sizeof(hash_entry));
-    hash_entry->key = key;
-    hash_entry->value = value;
-    hash_entry->next = NULL;
-    return hash_entry;
+    hash_entry* entry = malloc(sizeof(hash_entry));
+    entry->key = key;
+    entry->value = value;
+    entry->next = NULL;
+    return entry;
 }
 
 // Free the hash entry and its next elements.
-void hash_entry_free(hash_entry* hash_entry) {
-    if(hash_entry != NULL) {
-        hash_entry_free(hash_entry->next);
-        free(hash_entry->next);
+void hash_entry_free(hash_entry* entry) {
+    if(entry != NULL && entry->next != NULL) {
+        hash_entry_free(entry->next);
+        entry->next = NULL;
     }
+
+    free(entry);
 }
