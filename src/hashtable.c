@@ -178,7 +178,6 @@ void hash_table_print(hash_table* ht) {
     printf(" ------- -------\n");
 }
 
-// Hash function - todo
 unsigned int hash(hash_table* ht, int key) {
     return key % ht->size;
 }
