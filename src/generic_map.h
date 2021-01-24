@@ -104,7 +104,7 @@ bool get_ ## prefix ## _value(prefix ## _map* map, key_type key, value_type* val
 }                                                                                                                              \
                                                                                                                                \
 int prefix ## _key_exists(prefix ## _map* map, key_type key) {                                                                 \
-    for(int i = 0; i < ma->count; i++) {                                                                                       \
+    for(int i = 0; i < map->count; i++) {                                                                                      \
         if((map->entries + i)->key == key) {                                                                                   \
             return i;                                                                                                          \
         }                                                                                                                      \

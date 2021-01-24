@@ -9,7 +9,7 @@ BUILD=out
 
 # Files
 EXECUTABLE=main
-SOURCE=$(SRC)/main.c $(SRC)/hashtable.c
+SOURCE=$(SRC)/main.c $(SRC)/simple_map.c
 
 # Flags
 CC_FLAGS=-std=c11
