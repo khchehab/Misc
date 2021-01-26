@@ -9,7 +9,7 @@ BUILD=out
 
 # Files
 EXECUTABLE=main
-SOURCE=$(SRC)/main.c $(SRC)/simple_map.c
+SOURCE=$(SRC)/main.c $(SRC)/varray.c
 
 # Flags
 CC_FLAGS=-std=c11
