@@ -1,71 +1,46 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-
-// ---------------------------------------------------- //
-
-#define INITIAL_SIZE 10
-#define MAP_ENTRY_INCREMENTS 10
-
-typedef struct entry_t {
-    int key;
-    int value;
-} entry_t;
-
-typedef struct map_t {
-    int size;
-    int count;
-    entry_t* entries;
-} map_t;
-
-/*
- * Initialize the map.
- */
-map_t map_init() {
-    map_t map;
-    map_clear(&map);
-    return map;
-}
-
-/*
- * Free the map entries from memory.
- */
-void map_free(map_t* map) {
-    free(map->entries);
-}
-
-/*
- * Reset the map to its initial state.
- */
-void map_clear(map_t* map) {
-    map->size = INITIAL_SIZE;
-    map->count = 0;
-
-    // free the current entries memory
-    if(map->entries != NULL) {
-        free(map->entries);
-    }
-
-    // allocate memory for the entries
-    map->entries = malloc(map->size * sizeof(entry_t));
-}
-
-/*
- * Checks if a key exists in the map.
- */
-bool map_key_exist(map_t* map, int key) {
-
-}
-
-// value exist - optional
-// get
-// put
-// remove by key
-// print
-// helper functions for growing and shrinking
-
-// ---------------------------------------------------- //
+#include "map.h"
 
 int main(int argc, char* argv[]) {
+    map_t map = map_init();
+
+    printf("first\n------------\n");
+    map_print(&map);
+
+    printf("second\n------------\n");
+    map_put(&map, 42, 55);
+    map_put(&map, 33, 66);
+    map_put(&map, 22, 77);
+    map_put(&map, 55, 112);
+    map_print(&map);
+
+    printf("third\n------------\n");
+    map_put(&map, 1, 11);
+    map_put(&map, 2, 22);
+    map_put(&map, 3, 33);
+    map_put(&map, 4, 44);
+    map_put(&map, 5, 55);
+    map_put(&map, 6, 66);
+    map_put(&map, 7, 77);
+    map_put(&map, 8, 88);
+    map_put(&map, 9, 99);
+    map_print(&map);
+
+    printf("fourth\n------------\n");
+    map_remove(&map, 44);
+    map_print(&map);
+
+    printf("fifth\n------------\n");
+    map_remove(&map, 22);
+    map_remove(&map, 33);
+    map_print(&map);
+
+    printf("sixth\n------------\n");
+    map_remove(&map, 7);
+    map_remove(&map, 8);
+    map_remove(&map, 9);
+    map_print(&map);
+
+    map_free(&map);
     return 0;
 }
