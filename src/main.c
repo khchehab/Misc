@@ -1,28 +1,79 @@
 #include <stdio.h>
-#include "map.h"
+#include "varray.h"
 
 int main(int argc, char* argv[]) {
-    simple_map_t map = simple_map_init();
-    simple_map_put(&map, "key1", "value1");
-    simple_map_put(&map, "key2", "value2");
-    simple_map_put(&map, "key3", "value3");
+    varray_t varray = varray_init();
 
-    for(int i = 0; i < map.count; i++) {
-        printf("[%s] => %s\n", map.entries[i].key, map.entries[i].value);
+    printf("--------------\nfirst\n");
+    varray_print(&varray);
+    
+    printf("--------------\nsecond\n");
+    varray_add(&varray, 42);
+    varray_add(&varray, 43);
+    varray_add(&varray, 22);
+    varray_print(&varray);
+    
+    printf("--------------\nthird\n");
+    for(int i = 0; i < 10; i++) {
+        varray_add(&varray, i + 1);
     }
+    varray_print(&varray);
+    varray_add_at(&varray, 1, 23);
+    varray_add_at(&varray, 5, 65);
+    varray_print(&varray);
+    
+    printf("--------------\nfourth\n");
+    varray_clear(&varray);
+    varray_print(&varray);
 
-    if(!simple_map_key_exist(&map, "key1")) {
-        printf("key1 does not exist\n");
+    varray_add(&varray, 42);
+    varray_add(&varray, 43);
+    varray_add(&varray, 22);
+    for(int i = 0; i < 10; i++) {
+        varray_add(&varray, i + 1);
+    }
+    varray_add_at(&varray, 1, 23);
+    varray_add_at(&varray, 5, 65);
+    
+    printf("--------------\nfifth\n");
+    varray_remove(&varray, 44);
+    varray_remove(&varray, 22);
+    varray_remove(&varray, 99);
+    varray_remove(&varray, 11002);
+    varray_print(&varray);
+    
+    printf("--------------\nsixth\n");
+    varray_remove_at(&varray, 2);
+    varray_remove_at(&varray, 0);
+    varray_remove_at(&varray, 101);
+    varray_print(&varray);
+    
+    printf("--------------\nseventh\n");
+    int* val;
+    if((val = varray_get(&varray, 0)) == NULL) {
+        printf("Index 0 doesn't have any element\n");
     } else {
-        printf("key1 does exist\n");
+        printf("Index 0 has a value of %d\n", *val);
     }
-
-    if(!simple_map_key_exist(&map, "key42")) {
-        printf("key42 does not exist\n");
+    if((val = varray_get(&varray, 5)) == NULL) {
+        printf("Index 5 doesn't have any element\n");
     } else {
-        printf("key42 does exist\n");
+        printf("Index 5 has a value of %d\n", *val);
     }
+    if((val = varray_get(&varray, 565)) == NULL) {
+        printf("Index 565 doesn't have any element\n");
+    } else {
+        printf("Index 565 has a value of %d\n", *val);
+    }
+    varray_print(&varray);
+    
+    printf("--------------\neighth\n");
+    varray_remove(&varray, 8);
+    varray_remove(&varray, 7);
+    varray_remove(&varray, 6);
+    varray_remove(&varray, 5);
+    varray_print(&varray);
 
-    simple_map_free(&map);
+    varray_free(&varray);
     return 0;
 }
