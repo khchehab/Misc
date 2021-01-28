@@ -2,45 +2,27 @@
 #include "map.h"
 
 int main(int argc, char* argv[]) {
-    map_t map = map_init();
+    simple_map_t map = simple_map_init();
+    simple_map_put(&map, "key1", "value1");
+    simple_map_put(&map, "key2", "value2");
+    simple_map_put(&map, "key3", "value3");
 
-    printf("first\n------------\n");
-    map_print(&map);
+    for(int i = 0; i < map.count; i++) {
+        printf("[%s] => %s\n", map.entries[i].key, map.entries[i].value);
+    }
 
-    printf("second\n------------\n");
-    map_put(&map, 42, 55);
-    map_put(&map, 33, 66);
-    map_put(&map, 22, 77);
-    map_put(&map, 55, 112);
-    map_print(&map);
+    if(!simple_map_key_exist(&map, "key1")) {
+        printf("key1 does not exist\n");
+    } else {
+        printf("key1 does exist\n");
+    }
 
-    printf("third\n------------\n");
-    map_put(&map, 1, 11);
-    map_put(&map, 2, 22);
-    map_put(&map, 3, 33);
-    map_put(&map, 4, 44);
-    map_put(&map, 5, 55);
-    map_put(&map, 6, 66);
-    map_put(&map, 7, 77);
-    map_put(&map, 8, 88);
-    map_put(&map, 9, 99);
-    map_print(&map);
+    if(!simple_map_key_exist(&map, "key42")) {
+        printf("key42 does not exist\n");
+    } else {
+        printf("key42 does exist\n");
+    }
 
-    printf("fourth\n------------\n");
-    map_remove(&map, 44);
-    map_print(&map);
-
-    printf("fifth\n------------\n");
-    map_remove(&map, 22);
-    map_remove(&map, 33);
-    map_print(&map);
-
-    printf("sixth\n------------\n");
-    map_remove(&map, 7);
-    map_remove(&map, 8);
-    map_remove(&map, 9);
-    map_print(&map);
-
-    map_free(&map);
+    simple_map_free(&map);
     return 0;
 }
